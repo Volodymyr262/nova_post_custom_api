@@ -1,0 +1,42 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="5">
+            <item index="0" class="java.lang.String" itemvalue="gunicorn" />
+            <item index="1" class="java.lang.String" itemvalue="pyyaml" />
+            <item index="2" class="java.lang.String" itemvalue="algoliasearch-django" />
+            <item index="3" class="java.lang.String" itemvalue="django" />
+            <item index="4" class="java.lang.String" itemvalue="djangorestframework-simplejwt" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="W292" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="flask.Flask" />
+          <option value="studybud.base.models.Room.*" />
+          <option value="studybud.base.models.Topic.*" />
+          <option value="studybud.base.models.Message.*" />
+          <option value="studybud.base.api.views.base" />
+          <option value="studybud.base.api.serializers.*" />
+          <option value="base.models.Post.*" />
+          <option value="imageApi.base.api.serializers.base" />
+          <option value="imageApi.base.api.views.*" />
+          <option value="backend.cfehome.products.models.Product.objects" />
+          <option value="backend.cfehome.cfehome.routers.products" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
