@@ -1,0 +1,15 @@
+<!-- track_parcel.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Track Parcel</title>
+</head>
+<body>
+    <h2>Track Parcel</h2>
+    <form method="post" action="{% url 'track_parcel' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Track</button>
+    </form>
+</body>
+</html>
