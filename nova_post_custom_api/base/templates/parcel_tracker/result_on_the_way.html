@@ -1,0 +1,63 @@
+<!-- result.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parcel Tracking Result</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initMap" async defer></script>
+    <style>
+        #map {
+            height: 400px;
+        }
+    </style>
+    <script>
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: {{ location_recipient.lat }}, lng: {{ location_recipient.lng }}},
+                zoom: 12
+            });
+
+            // Create markers for recipient and sender
+            var markerRecipient = new google.maps.Marker({
+                position: {lat: {{ location_recipient.lat }}, lng: {{ location_recipient.lng }}},
+                map: map,
+                title: 'Recipient'
+            });
+
+            var markerSender = new google.maps.Marker({
+                position: {lat: {{ location_sender.lat }}, lng: {{ location_sender.lng }}},
+                map: map,
+                title: 'Sender'
+            });
+
+            // Create a DirectionsService object to use the route method and get a result for our request
+            var directionsService = new google.maps.DirectionsService();
+
+            // Define the travel mode
+            var request = {
+                origin: {lat: {{ location_recipient.lat }}, lng: {{ location_recipient.lng }}},
+                destination: {lat: {{ location_sender.lat }}, lng: {{ location_sender.lng }}},
+                travelMode: 'DRIVING'
+            };
+
+            // Pass the request to the route method
+            directionsService.route(request, function(result, status) {
+                if (status == 'OK') {
+                    // Display the route on the map
+                    var directionsRenderer = new google.maps.DirectionsRenderer();
+                    directionsRenderer.setMap(map);
+                    directionsRenderer.setDirections(result);
+                } else {
+                    console.error('Directions request failed with status:', status);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Parcel Tracking Result</h1>
+    <p>Статус: {{ status }}</p>
+    <p>Адреса одержувача: {{ warehouse_recipient_address }}</p>
+    <p>Адреса відправника: {{ warehouse_sender_address }}</p>
+    <div id="map"></div>
+</body>
+</html>

@@ -3,9 +3,25 @@
 <html>
 <head>
     <title>Parcel Tracking Result</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initMap" async defer></script>
+    <script>
+        function initMap() {
+            var location = {lat: {{ location.lat }}, lng: {{ location.lng }}};
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: location
+            });
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+        }
+    </script>
 </head>
 <body>
-    <h2>Parcel Tracking Result</h2>
-    <pre>{{ api_response | pprint }}</pre>
+    <h1>Parcel Tracking Result</h1>
+    <p>Статус: {{status}}</p>
+    <p>Адреса прибуття: {{ address }}</p>
+    <div id="map" style="height: 400px;"></div>
 </body>
 </html>
