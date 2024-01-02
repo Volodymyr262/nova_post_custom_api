@@ -4,6 +4,7 @@ from .forms import ParcelForm, ReturnRequestForm
 from django.conf import settings  # Import settings
 from django.http import JsonResponse
 import googlemaps
+from .moduls import get_return_reason_choices, get_return_subtype_choices
 from .moduls import search_settlements, search_settlement_streets
 
 
@@ -135,7 +136,6 @@ def create_return_request(request):
                                                              settlement_ref=recipient_settlement, limit=1)
             print(recipient_settlement_street)
             print(recipient_settlement)
-
             return JsonResponse({'success': True, 'message': 'Return request created successfully'})
 
     else:

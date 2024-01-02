@@ -86,4 +86,4 @@ def get_return_reason_choices(api_key):
 
 def get_return_subtype_choices(api_key, reason_ref):
     subtypes = get_return_reason_subtypes(api_key, reason_ref)
-    return [(subtype['Ref'], subtype['Description']) for subtype in subtypes]
+    return [(subtype['ReasonRef'], subtype['Description']) for subtype in subtypes]
