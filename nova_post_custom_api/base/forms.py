@@ -45,3 +45,31 @@ class ReturnRequestForm(forms.Form):
             raise forms.ValidationError('Please select a subtype reason.')
 
         return subtype_reason_ref
+
+
+class RedirectRequestForm(forms.Form):
+    IntDocNumber = forms.CharField(label='IntDocNumber', max_length=36)
+    PaymentMethod = forms.ChoiceField(
+        label='Payment Method',
+        choices=[('Cash', 'Cash'), ('NonCash', 'NonCash')],
+    )
+    Note = forms.CharField(label='Note', max_length=100, required=False)
+    OrderType = forms.CharField(initial='orderRedirecting', widget=forms.HiddenInput())
+    RecipientContactName = forms.CharField(label='Recipient Contact Name', max_length=39)
+    RecipientPhone = forms.CharField(label='Recipient Phone', max_length=40)
+    Customer = forms.CharField(initial='Sender', widget=forms.HiddenInput())
+    PayerType = forms.ChoiceField(
+        label='Payer Type',
+        choices=[
+        ('Sender', 'Відправник'),
+        ('Recipient', 'Отримувач')])
+    ServiceType = forms.ChoiceField(
+        label='Service Type',
+        choices=[('DoorsWarehouse', 'Doors to Warehouse'), ('WarehouseWarehouse', 'Warehouse to Warehouse')],
+    )
+    RecipientSettlement = forms.CharField(label='Recipient Settlement', max_length=36)
+    RecipientSettlementStreet = forms.CharField(label='Recipient Settlement Street', max_length=36)
+    BuildingNumber = forms.CharField(label='Building Number', max_length=36)
+    NoteAddressRecipient = forms.CharField(label='Note Address Recipient', max_length=36)
+    RecipientWarehouseID = forms.CharField(label='Recipient Warehouse Id', max_length=36)
+    RecipientWarehouse = forms.CharField(label='Recipient Warehouse', max_length=36, required=False)

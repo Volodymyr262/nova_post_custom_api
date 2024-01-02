@@ -1,4 +1,68 @@
 import requests
+from django.conf import settings
+from django.http import JsonResponse
+
+
+def check_return_possibility(request, number):
+    # Your Nova Poshta API credentials
+    api_key = settings.NOVA_POST_API_KEY
+    api_url = 'https://api.novaposhta.ua/v2.0/json/'
+
+    # Example data for checking return possibility
+    data = {
+        "apiKey": api_key,
+        "modelName": "InternetDocument",
+        "calledMethod": "checkPossibilityCreateReturn",
+        "methodProperties": {
+            "Number": number
+        }
+    }
+
+    # Make a request to Nova Poshta API
+    response = requests.post(api_url, json=data)
+    api_response = response.json()
+
+    # Check if the request was successful
+    if 'success' in api_response and api_response['success']:
+        # Check the possibility status in the response
+        possibility_status = api_response.get('data', {}).get('Status', '')
+
+        # You can customize the response based on your needs
+        return JsonResponse({'success': True, 'possibility_status': possibility_status})
+    else:
+        # Handle the case where the request was not successful
+        return JsonResponse({'success': False, 'message': 'Failed to check return possibility'})
+
+
+def check_redirect_possibility(request, number):
+    # Your Nova Poshta API credentials
+    api_key = settings.NOVA_POST_API_KEY
+    api_url = 'https://api.novaposhta.ua/v2.0/json/'
+
+    # Example data for checking return possibility
+    data = {
+        "apiKey": api_key,
+        "modelName": "AdditionalServiceGeneral",
+        "calledMethod": "checkPossibilityForRedirecting",
+        "methodProperties": {
+            "Number": number
+        }
+    }
+
+    # Make a request to Nova Poshta API
+    response = requests.post(api_url, json=data)
+    api_response = response.json()
+
+    # Check if the request was successful
+    if 'success' in api_response and api_response['success']:
+        # Check the possibility status in the response
+        possibility_status = api_response.get('data', {}).get('Status', '')
+
+        # You can customize the response based on your needs
+        return JsonResponse({'success': True, 'possibility_status': possibility_status})
+    else:
+        # Handle the case where the request was not successful
+        return JsonResponse({'success': False, 'message': 'Failed to check return possibility'})
 
 
 def search_settlements(api_key, city_name, limit=1, page=1):
@@ -112,3 +176,66 @@ def create_return_request_api(api_key, form_data):
 
     response = requests.post(api_url, json=data)
     return response.json()
+
+
+def get_warehouses(api_key, city_name, warehouse_id=None, find_by_string=""):
+    api_url = 'https://api.novaposhta.ua/v2.0/json/'
+
+    data = {
+        "apiKey": api_key,
+        "modelName": "Address",
+        "calledMethod": "getWarehouses",
+        "methodProperties": {
+            "FindByString": find_by_string,
+            "CityName": city_name,
+            "WarehouseId": warehouse_id,
+            "Limit": 1
+        }
+    }
+
+    response = requests.post(api_url, json=data)
+
+    if response.json().get('data', []):
+        data = response.json().get('data', [])
+        return [warehouse.get('Ref') for warehouse in data][0]
+
+    # Handle the case when the API request fails
+    return None
+
+
+def create_return_redirect_api(api_key, form_data):
+    api_url = 'https://api.novaposhta.ua/v2.0/json/'
+    city_name = form_data['RecipientSettlement']
+    data = {
+        "apiKey": api_key,
+        "modelName": "AdditionalService",
+        "calledMethod": "save",
+        "methodProperties": {
+            "IntDocNumber": form_data['IntDocNumber'],
+            "PaymentMethod": form_data['PaymentMethod'],
+            "Note": form_data['Note'],
+            "OrderType": form_data["OrderType"],
+            "RecipientContactName": form_data["RecipientContactName"],
+            "RecipientPhone": form_data["RecipientPhone"],
+            "Customer": form_data["Customer"],
+            "PayerType": form_data.get('PayerType'),
+            "ServiceType": form_data["ServiceType"],
+            "RecipientSettlement": search_settlements(api_key, limit=1, city_name=form_data['RecipientSettlement']),
+            "RecipientSettlementStreet": search_settlement_streets(
+                api_key,
+                street_name=form_data['RecipientSettlementStreet'],
+                settlement_ref=search_settlements(api_key, limit=1, city_name=form_data['RecipientSettlement']),
+                limit=1
+            ),
+            "BuildingNumber": form_data['BuildingNumber'],
+            "NoteAddressRecipient": form_data['NoteAddressRecipient'],
+            "RecipientWarehouse": get_warehouses(api_key, city_name=city_name
+                                                   ,warehouse_id=form_data['RecipientWarehouseID'],find_by_string="")
+        }
+    }
+
+    response = requests.post(api_url, json=data)
+    return response.json()
+
+
+
