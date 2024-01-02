@@ -86,4 +86,29 @@ def get_return_reason_choices(api_key):
 
 def get_return_subtype_choices(api_key, reason_ref):
     subtypes = get_return_reason_subtypes(api_key, reason_ref)
-    return [(subtype['ReasonRef'], subtype['Description']) for subtype in subtypes]
+    return [(subtype['Ref'], subtype['Description']) for subtype in subtypes]
+
+
+def create_return_request_api(api_key, form_data):
+    api_url = 'https://api.novaposhta.ua/v2.0/json/'
+    data = {
+        "apiKey": api_key,
+        "modelName": "AdditionalService",
+        "calledMethod": "save",
+        "methodProperties": {
+            "IntDocNumber": form_data['tracking_number'],
+            "PaymentMethod": form_data['payment_method'],
+            "Reason": form_data['reason_ref'],
+            "SubtypeReason": form_data['subtype_reason_ref'],
+            "Note": form_data.get('note', ''),
+            "OrderType": "orderCargoReturn",
+            "RecipientSettlement": search_settlements(api_key, limit=1, city_name=form_data['recipient_settlement']),
+            "RecipientSettlementStreet": search_settlement_streets(api_key, street_name=form_data['recipient_settlement_street'],
+                                                             settlement_ref=search_settlements(api_key, limit=1, city_name=form_data['recipient_settlement']), limit=1),
+            "BuildingNumber": form_data['building_number'],
+            "NoteAddressRecipient": form_data['note_address_recipient']
+        }
+    }
+
+    response = requests.post(api_url, json=data)
+    return response.json()

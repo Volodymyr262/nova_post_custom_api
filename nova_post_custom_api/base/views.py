@@ -5,7 +5,7 @@ from django.conf import settings  # Import settings
 from django.http import JsonResponse
 import googlemaps
 from .moduls import get_return_reason_choices, get_return_subtype_choices
-from .moduls import search_settlements, search_settlement_streets
+from .moduls import search_settlements, search_settlement_streets, create_return_request_api
 
 
 def track_parcel(request):
@@ -134,9 +134,9 @@ def create_return_request(request):
             recipient_settlement = search_settlements(api_key, limit=1, city_name=city_name)
             recipient_settlement_street = search_settlement_streets(api_key, street_name=street_name,
                                                              settlement_ref=recipient_settlement, limit=1)
-            print(recipient_settlement_street)
-            print(recipient_settlement)
-            return JsonResponse({'success': True, 'message': 'Return request created successfully'})
+            api_response = create_return_request_api(api_key=api_key, form_data=form.data)
+            return JsonResponse(api_response, safe=False, json_dumps_params={'ensure_ascii': False},
+                                content_type='application/json;charset=utf-8')
 
     else:
         form = ReturnRequestForm()
