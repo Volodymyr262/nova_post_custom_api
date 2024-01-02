@@ -238,4 +238,46 @@ def create_return_redirect_api(api_key, form_data):
     return response.json()
 
 
+def check_possibility_change_ew(api_key, int_doc_number):
+    api_url = 'https://api.novaposhta.ua/v2.0/json/'
 
+    data = {
+        "apiKey": api_key,
+        "modelName": "AdditionalService",
+        "calledMethod": "CheckPossibilityChangeEW",
+        "methodProperties": {
+            "IntDocNumber": int_doc_number
+        }
+    }
+
+    response = requests.post(api_url, json=data)
+    result = response.json()
+
+    # Отримуємо вартість поля "success"
+    success_value = result.get('success', False)
+
+    return success_value
+
+
+def create_change_data_request_api(api_key, form_data):
+    api_url = 'https://api.novaposhta.ua/v2.0/json/'
+
+    data = {
+        "apiKey": api_key,
+        "modelName": "AdditionalService",
+        "calledMethod": "save",
+        "methodProperties": {
+            "IntDocNumber": form_data['IntDocNumber'],
+            "PaymentMethod": form_data['PaymentMethod'],
+            "OrderType": form_data["OrderType"],
+            "SenderContactName": form_data["SenderContactName"],
+            "SenderPhone": form_data["SenderPhone"],
+            #"Recipient": form_data.get("Recipient", ''),
+            "RecipientContactName": form_data.get("RecipientContactName", ''),
+            "RecipientPhone": form_data.get("RecipientPhone", ''),
+            "PayerType": form_data['PayerType'],
+        }
+    }
+
+    response = requests.post(api_url, json=data)
+    return response.json()

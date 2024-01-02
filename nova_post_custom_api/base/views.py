@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect, HttpResponse
 import requests
-from .forms import ParcelForm, ReturnRequestForm, RedirectRequestForm
+from .forms import ParcelForm, ReturnRequestForm, RedirectRequestForm, ChangeDataRequestForm
 from django.conf import settings  # Import settings
 from django.http import JsonResponse
 import googlemaps
 from .moduls import get_return_reason_choices, get_return_subtype_choices
-from .moduls import search_settlements, search_settlement_streets, create_return_request_api, check_return_possibility, \
-    check_redirect_possibility, create_return_redirect_api, get_warehouses
+from .moduls import create_return_request_api, check_return_possibility, \
+    check_redirect_possibility, create_return_redirect_api, check_possibility_change_ew, create_change_data_request_api
 
 
 def track_parcel(request):
@@ -127,3 +127,18 @@ def create_redirect_response(request):
         form = RedirectRequestForm()
 
     return render(request, 'return_redirect_form.html', {'form': form})
+
+
+def create_data_change_response(request):
+    if request.method == 'POST':
+        form = ChangeDataRequestForm(request.POST)
+        api_key = settings.NOVA_POST_API_KEY
+        if form.is_valid():
+            tracking_number = form.cleaned_data['IntDocNumber']
+            api_response = create_change_data_request_api(api_key, form.data)
+            return JsonResponse(api_response, safe=False, json_dumps_params={'ensure_ascii': False},
+                                content_type='application/json;charset=utf-8')
+    else:
+        form = ChangeDataRequestForm()
+
+    return render(request, 'data_change_form.html', {'form':form})

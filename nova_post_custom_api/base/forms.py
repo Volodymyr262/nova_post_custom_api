@@ -73,3 +73,21 @@ class RedirectRequestForm(forms.Form):
     NoteAddressRecipient = forms.CharField(label='Note Address Recipient', max_length=36)
     RecipientWarehouseID = forms.CharField(label='Recipient Warehouse Id', max_length=36)
     RecipientWarehouse = forms.CharField(label='Recipient Warehouse', max_length=36, required=False)
+
+
+class ChangeDataRequestForm(forms.Form):
+    IntDocNumber = forms.CharField(label='IntDocNumber', max_length=36)
+    PaymentMethod = forms.ChoiceField(
+        label='Payment Method',
+        choices=[('Cash', 'Cash'), ('NonCash', 'NonCash')],
+    )
+    OrderType = forms.CharField(initial='orderChangeEW', widget=forms.HiddenInput())
+    SenderContactName = forms.CharField(label='Sender Contact Name', max_length=36)
+    SenderPhone = forms.CharField(label='Sender Phone', max_length=37)
+    #Recipient = forms.CharField(label='Recipient', max_length=38, required=False)
+    RecipientContactName = forms.CharField(label='Recipient Contact Name', max_length=39, required=False)
+    RecipientPhone = forms.CharField(label='Recipient Phone', max_length=40, required=False)
+    PayerType = forms.ChoiceField(
+        label='Payer Type',
+        choices=[('Recipient', 'Отримувач'), ('Sender', 'Відправник')],
+    )
