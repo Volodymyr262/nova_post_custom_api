@@ -1,10 +1,25 @@
-<!-- return_request_form.html -->
+{% extends 'base.html' %}
 
 {% block content %}
-  <h2>Create Redirect Request</h2>
-  <form method="post" >
+<body>
+
+ {% if success == False %}
+    <div class="alert alert-danger mt-2">
+      {{errors}}
+    </div>
+  {% endif %}
+  <h2>Переадресація посилки</h2>
+    <div class='form-group'>
+      <table>
+  <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
+    {{ form.as_table }}
+    </table>
+    <button class="btn btn-secondary" type="submit">Submit</button>
+
   </form>
+</div>
+
+
+  </body>
 {% endblock %}

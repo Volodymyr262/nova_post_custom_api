@@ -1,15 +1,18 @@
 <!-- track_parcel.html -->
 <!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
 <html>
 <head>
     <title>Track Parcel</title>
 </head>
 <body>
-    <h2>Track Parcel</h2>
+    <h2>Трекінг посилки</h2>
     <form method="post" action="{% url 'track_parcel' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Track</button>
+        <button class="btn btn-secondary" type="submit">Шукати</button>
     </form>
 </body>
 </html>
+{% endblock %}

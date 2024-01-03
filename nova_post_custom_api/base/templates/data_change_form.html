@@ -1,8 +1,16 @@
+{% extends 'base.html' %}
 {% block content %}
-  <h2>Create Data Change Request</h2>
+{% if success == False %}
+    <div class="alert alert-danger mt-2">
+      {{errors}}
+    </div>
+  {% endif %}
+  <h2>Зміна даних</h2>
   <form method="post" >
+    <table>
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
+    {{ form.as_table }}
+      </table>
+    <button class="btn btn-secondary" type="submit">Submit</button>
   </form>
 {% endblock %}
