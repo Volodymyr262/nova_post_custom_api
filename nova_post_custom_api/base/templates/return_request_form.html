@@ -7,11 +7,12 @@
     </div>
   {% endif %}
   <h2>Повернення посилки</h2>
+ <p>Послуга доступна лише для клієнтів відправників</p>
   <form method="post" >
     <table>
     {% csrf_token %}
     {{ form.as_table }}
       </table>
-    <button class="btn btn-secondary" type="submit">Submit</button>
+    <button class="btn btn-secondary" type="submit">Вислати Заявку</button>
   </form>
 {% endblock %}

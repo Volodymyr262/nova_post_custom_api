@@ -7,6 +7,7 @@ from .moduls import get_return_reason_choices, get_return_subtype_choices
 from django.conf import settings
 
 
+# форма для трекінгу
 class ParcelForm(forms.ModelForm):
     parcel_number = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': '20450839412914', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
@@ -19,6 +20,7 @@ class ParcelForm(forms.ModelForm):
         fields = ['parcel_number']
 
 
+# форма для заявки на повернення посилки
 class ReturnRequestForm(forms.Form):
     tracking_number = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': '20450839412914', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
@@ -70,6 +72,7 @@ class ReturnRequestForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control mt-2'})
     )
 
+    # api запит підпричин повернення залежно від причини
     def __init__(self, *args, **kwargs):
         super(ReturnRequestForm, self).__init__(*args, **kwargs)
 
@@ -77,7 +80,6 @@ class ReturnRequestForm(forms.Form):
         initial_reason_ref = self.fields['reason_ref'].initial
         self.fields['subtype_reason_ref'].choices = get_return_subtype_choices(settings.NOVA_POST_API_KEY,
                                                                                    initial_reason_ref)
-
 
     def clean_subtype_reason_ref(self):
         # Validate that subtype_reason_ref is selected if reason_ref is selected
@@ -90,6 +92,7 @@ class ReturnRequestForm(forms.Form):
         return subtype_reason_ref
 
 
+# форма створення заявки на переадресацію
 class RedirectRequestForm(forms.Form):
     IntDocNumber = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': '20450839412914', 'style': 'width: 300px;', 'class': 'form-control mt-5'}),
@@ -110,7 +113,7 @@ class RedirectRequestForm(forms.Form):
     OrderType = forms.CharField(initial='orderRedirecting', widget=forms.HiddenInput())
     RecipientContactName = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': 'Шевченко Андрій Валерійович', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
-        label='ПІБ',
+        label='ПІБ Отримувача',
         max_length=39
     )
     RecipientPhone = forms.CharField(
@@ -128,36 +131,36 @@ class RedirectRequestForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control mt-2'})
     )
     ServiceType = forms.ChoiceField(
-        label='Service Type',
+        label='Тип послуги',
         choices=[
-            ('DoorsWarehouse', 'Doors to Warehouse'),
-            ('WarehouseWarehouse', 'Warehouse to Warehouse')
+            ('DoorsWarehouse', 'З вашогу адресу до відділення'),
+            ('WarehouseWarehouse', 'З відділення до відділення')
         ],
         widget=forms.Select(attrs={'class': 'form-control mt-2'})
     )
     RecipientSettlement = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Name', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
-        label='Recipient Settlement',
+        widget=forms.TextInput(attrs={'placeholder': 'Київ', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
+        label='Місто отримувача',
         max_length=36
     )
     RecipientSettlementStreet = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Name', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
-        label='Recipient Settlement Street',
+        widget=forms.TextInput(attrs={'placeholder': 'Шевченка', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
+        label='Вулиця отримувача',
         max_length=36
     )
     BuildingNumber = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Name', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
-        label='Building Number',
+        widget=forms.TextInput(attrs={'placeholder': '2', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
+        label='Номер будинку',
         max_length=36
     )
     NoteAddressRecipient = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Name', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
-        label='Note Address Recipient',
+        widget=forms.TextInput(attrs={'placeholder': 'Замітки', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
+        label='Замітки до адреси отримувача',
         max_length=36
     )
     RecipientWarehouseID = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Name', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
-        label='Recipient Warehouse Id',
+        widget=forms.TextInput(attrs={'placeholder': '31', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
+        label='Номер відділення отримувача',
         max_length=36
     )
     RecipientWarehouse = forms.CharField(
@@ -168,42 +171,43 @@ class RedirectRequestForm(forms.Form):
     )
 
 
+# форма створення заявки на зміну даних
 class ChangeDataRequestForm(forms.Form):
     IntDocNumber = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Name', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
-        label='IntDocNumber',
+        widget=forms.TextInput(attrs={'placeholder': '20450839412915', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
+        label='Номер посилки',
         max_length=36
     )
     PaymentMethod = forms.ChoiceField(
-        label='Payment Method',
-        choices=[('Cash', 'Cash'), ('NonCash', 'NonCash')],
+        label='Спосіб платежу',
+        choices=[('Cash', 'Готівка'), ('NonCash', 'Карта')],
         widget=forms.Select(attrs={'class': 'form-control mt-2'})
     )
     OrderType = forms.CharField(initial='orderChangeEW', widget=forms.HiddenInput())
     SenderContactName = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Name', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
-        label='Sender Contact Name',
+        widget=forms.TextInput(attrs={'placeholder': 'Шевченко Олексій Григорович', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
+        label='ПІБ Відправника',
         max_length=36
     )
     SenderPhone = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Name', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
-        label='Sender Phone',
+        widget=forms.TextInput(attrs={'placeholder': '+380959157652', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
+        label='Номер відправника',
         max_length=37
     )
     RecipientContactName = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Name', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
-        label='Recipient Contact Name',
+        widget=forms.TextInput(attrs={'placeholder': 'Шевченко Олексій Іванович', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
+        label='ПІБ Отримувача',
         max_length=39,
         required=False
     )
     RecipientPhone = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Name', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
-        label='Recipient Phone',
+        widget=forms.TextInput(attrs={'placeholder': '+38095876512', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
+        label='Номер ортмувача',
         max_length=40,
         required=False
     )
     PayerType = forms.ChoiceField(
-        label='Payer Type',
+        label='Тип платника',
         choices=[('Recipient', 'Отримувач'), ('Sender', 'Відправник')],
         widget=forms.Select(attrs={'class': 'form-control mt-2'})
     )

@@ -6,11 +6,13 @@
     </div>
   {% endif %}
   <h2>Зміна даних</h2>
+ <p>Не можна змінити контрагента-відправника.
+   Можна змінити ПІБ контакту відправника , якщо оцінна вартість ЕН не перевищує 5000 грн</p>
   <form method="post" >
     <table>
     {% csrf_token %}
     {{ form.as_table }}
       </table>
-    <button class="btn btn-secondary" type="submit">Submit</button>
+    <button class="btn btn-secondary" type="submit">Вислати Заявку</button>
   </form>
 {% endblock %}

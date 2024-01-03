@@ -3,6 +3,7 @@ from django.conf import settings
 from django.http import JsonResponse
 
 
+# api запит на перевірку можливості повернення посилки
 def check_return_possibility(request, number):
     # Your Nova Poshta API credentials
     api_key = settings.NOVA_POST_API_KEY
@@ -34,6 +35,7 @@ def check_return_possibility(request, number):
         return JsonResponse({'success': False, 'message': 'Failed to check return possibility'})
 
 
+# api запит на перевірку можливості переадресації
 def check_redirect_possibility(request, number):
     # Your Nova Poshta API credentials
     api_key = settings.NOVA_POST_API_KEY
@@ -65,6 +67,7 @@ def check_redirect_possibility(request, number):
         return JsonResponse({'success': False, 'message': 'Failed to check return possibility'})
 
 
+# пошук Ref коду міста за назвою
 def search_settlements(api_key, city_name, limit=1, page=1):
     api_url = 'https://api.novaposhta.ua/v2.0/json/'
 
@@ -89,6 +92,7 @@ def search_settlements(api_key, city_name, limit=1, page=1):
         return None
 
 
+# пошук Ref коду вулиці за назвою
 def search_settlement_streets(api_key, street_name, settlement_ref, limit=1):
     api_url = 'https://api.novaposhta.ua/v2.0/json/'
 
@@ -153,6 +157,7 @@ def get_return_subtype_choices(api_key, reason_ref):
     return [(subtype['Ref'], subtype['Description']) for subtype in subtypes]
 
 
+# api запит на повернення посилки
 def create_return_request_api(api_key, form_data):
     api_url = 'https://api.novaposhta.ua/v2.0/json/'
     data = {
@@ -178,6 +183,7 @@ def create_return_request_api(api_key, form_data):
     return response.json()
 
 
+# api запит на отримання коду Ref відділення нової пошти
 def get_warehouses(api_key, city_name, warehouse_id=None, find_by_string=""):
     api_url = 'https://api.novaposhta.ua/v2.0/json/'
 
@@ -203,6 +209,7 @@ def get_warehouses(api_key, city_name, warehouse_id=None, find_by_string=""):
     return None
 
 
+# api запит на переадресацію посилки
 def create_return_redirect_api(api_key, form_data):
     api_url = 'https://api.novaposhta.ua/v2.0/json/'
     city_name = form_data['RecipientSettlement']
@@ -238,6 +245,7 @@ def create_return_redirect_api(api_key, form_data):
     return response.json()
 
 
+# api запит на перевірку можливості зміни даних
 def check_possibility_change_ew(api_key, int_doc_number):
     api_url = 'https://api.novaposhta.ua/v2.0/json/'
 
@@ -259,6 +267,7 @@ def check_possibility_change_ew(api_key, int_doc_number):
     return success_value
 
 
+# api запит на зміну даних
 def create_change_data_request_api(api_key, form_data):
     api_url = 'https://api.novaposhta.ua/v2.0/json/'
 
