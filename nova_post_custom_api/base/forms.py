@@ -114,8 +114,8 @@ class RedirectRequestForm(forms.Form):
         max_length=39
     )
     RecipientPhone = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Name', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
-        label='Recipient Phone',
+        widget=forms.TextInput(attrs={'placeholder': '+380959157621', 'style': 'width: 300px;', 'class': 'form-control mt-2'}),
+        label='Номер отримувача',
         max_length=40
     )
     Customer = forms.CharField(initial='Sender', widget=forms.HiddenInput())
